@@ -1,5 +1,6 @@
 # convex-ode-subgradients
-Consier an original parametric ordinary differential equation (ODE) system 
+
+Convex relaxations of nonconvex functions are useful in methods for global optimization, since local minimization of a convex relaxation will provide a lower bound for the overarching global optimization problem. Consider a parametric ordinary differential equation (ODE) system:
 
 $$
 \begin{align*}
@@ -8,11 +9,11 @@ $$
 \end{align*}
 $$
 
-We consider two established methods for computing useful nonsmooth convex and concave relaxations of solutions of this parametric ODE system, namely,
-- the generalized-McCormick-based (GMB) relaxations proposed by Scott and Barton (2013), and
-- the optimization-based (OB) relaxations proposed by Song and Khan (2022).
+We consider two established methods for computing useful (but perhaps nonsmooth) convex relaxations of solutions of this parametric ODE system, namely,
+- the generalized-McCormick-based (GMB) relaxations proposed by [Scott and Barton (2013)](https://link.springer.com/article/10.1007/s10898-012-9909-0), and
+- the optimization-based (OB) relaxations proposed by [Song and Khan (2022)](https://link.springer.com/article/10.1007/s10107-021-01654-x).
 
-These ODE relaxations are useful in branch-and-bound-based deterministic global optimization problems with the ODE system embedded, and are described as solutions of auxiliary parametric ODE systems of the following general form: $\forall t\in(t_0,t_f]$,
+These methods both describe relaxations of ODE solutions as solutions of auxiliary parametric ODE systems of the following general form: $\forall t\in(t_0,t_f]$,
 
 $$
 \begin{align*}
@@ -21,9 +22,10 @@ $$
 \end{align*}
 $$
 
-The GMB and OB relaxation methods construct different right-hand-side (RHS) functions $(\mathbf{u},\mathbf{o})$ for use in the ODEs above, and these RHS functions are discontinuous with respect to the state variables in general.
+(Discontinuous jumps in Scott-Barton's formulation are neglected in this description, though we argue that these cannot occur when the considered subdomain is sufficiently small.)
+The GMB and OB relaxation methods construct different right-hand-side (RHS) functions $(\mathbf{u},\mathbf{o})$ for use in the ODEs above.
 
-This repository illustrates our new approaches for computing subgradients for the GMB and OB relaxations, provided that these ODE relaxations do not visit the discontinuities of $(\mathbf{u},\mathbf{o})$ during integration. The subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  This repository contains the Julia codes for all numerical examples in our accompanying article
+This repository illustrates our new approaches for computing subgradients for the GMB and OB relaxations. The subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  This repository contains Julia code for all numerical examples in our accompanying manuscript:
 
  > Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, under review.
 
@@ -56,24 +58,25 @@ $$
 \end{align}
 $$
 
-The involved functions above are constructed automatically based on sensitivities of the functions $(\mathbf{u},\mathbf{o})$ employed by the GMB or OB relaxations. Then, for each $(t,\mathbf{p})$, the transpose of each row $\mathbf{s}^\mathrm{cv}_{(i)}(t,\mathbf{p})$ is a valid subgradient of the ODE relaxation $x_i^\mathrm{cv}(t,\cdot)$ at $\mathbf{p}$; similarly for $\mathbf{S}^\mathrm{cc}$ and $\mathbf{x}^\mathrm{cc}$. 
+The involved functions above are constructed automatically based on sensitivity information concerning the functions $(\mathbf{u},\mathbf{o})$ employed by the GMB or OB relaxations. Then, for each $(t,\mathbf{p})$, the transposed row $\mathbf{s}^\mathrm{cv}_{(i)}(t,\mathbf{p})$ is a valid subgradient of the ODE relaxation $x_i^\mathrm{cv}(t,\cdot)$ at $\mathbf{p}$; similarly for $\mathbf{S}^\mathrm{cc}$ and $\mathbf{x}^\mathrm{cc}$. 
 
 
-Compared to the only established subgradient evaluation method (Khan and Barton, 2014) for the GMB relaxations, our new method has the advantage that the resulting subgradient evaluation ODE system is affine, and thus can be easily solved by off-the-shelf ODE solvers. Such affine nature also enables an efficient adjoint subgradient evaluation method whose implementation is proposed by Zhang and Khan (2023). Moreover, this system's RHS functions can be readily constructed from established subgradient library provided by [EAGO.jl](https://github.com/PSORLab/EAGO.jl) or [MCpp](https://github.com/coin-or/MCpp) in C++. There is no subgradient evaluation method for the OB relaxations prior to our work. For more details, please refer to the accompanying manuscript.
+Compared to the only established subgradient evaluation method ([Khan and Barton, 2014](https://dspace.mit.edu/handle/1721.1/103513)) for the GMB relaxations, our new method has the advantage that the resulting subgradient evaluation ODE system is affine, and thus can be easily solved by off-the-shelf ODE solvers. Such affine nature also enables an efficient adjoint subgradient evaluation method whose implementation is proposed by Zhang and Khan (2023). Moreover, this system's RHS functions can be readily constructed from established subgradient library provided by [EAGO.jl](https://github.com/PSORLab/EAGO.jl) or [MC++](https://github.com/coin-or/MCpp) in C++. Prior to our current manuscript, there was no existing subgradient evaluation method for the OB relaxations. For more details, please refer to the accompanying manuscript.
 
 ## Implementation contents
-The [src](https://github.com/kamilkhanlab/convex-ode-subgradients/tree/main/src) folder provides our codes for two numerical examples in the accompanying article. Note that even though this implementation is illustrated using the two examples, the implementation itself is versatile and can construct the ODE relaxation and subgradient evaluation systems automatically for any original parametric ODE system.
-### Example1.jl
+The [`/src/`](https://github.com/kamilkhanlab/convex-ode-subgradients/tree/main/src) folder provides our code for two numerical examples in the accompanying manuscript. Note that even though this implementation is illustrated using the two examples, the implementation itself is versatile, and can construct ODE relaxation and subgradient evaluation systems automatically for any original parametric ODE system.
 
-This is a Julia implementation which computes subgradients of the GMB relaxations of an parametric ODE system modified from [Example 1, Scott and Barton (2013)]. The codes produce the following figure
+### [Example1.jl](src/Example1.jl)
 
-![Example1](https://github.com/kamilkhanlab/convex-ode-subgradients/blob/main/results/Example1.png))
+This is a Julia implementation which computes subgradients of the GMB relaxations of an parametric ODE system adapted from [Example 1, Scott and Barton (2013)], producing the plot:
 
-### Example2.jl
+![Example1](results/Example1.png))
 
-This is a Julia implementation which computes subgradients of the OB relaxations for an ODE system of catalytic cracking of gas oil from [15.3.5, Floudas et al. (1999)]. The codes produce the following figure
+### [Example2.jl](src/Example2.jl)
 
-![Example2](https://github.com/kamilkhanlab/convex-ode-subgradients/blob/main/results/Example2.png))
+This is a Julia implementation which computes subgradients of the OB relaxations for an ODE system of catalytic cracking of gas oil from [15.3.5, Floudas et al. (1999)], producing the plot:
+
+![Example2](results/Example2.png))
 
 ## References
 
