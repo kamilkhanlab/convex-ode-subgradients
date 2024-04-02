@@ -1,6 +1,18 @@
 # convex-ode-subgradients
 
-Convex relaxations of nonconvex functions are useful in methods for global optimization, since local minimization of a convex relaxation will provide a lower bound for the overarching global optimization problem. Consider a parametric ordinary differential equation (ODE) system:
+Convex relaxations of nonconvex functions are useful in methods for global optimization, since local minimization of a convex relaxation will provide a lower bound for the overarching global optimization problem. This repository illustrates our new approach for computing subgradients for two recent convex relaxation methods (summarized below) for parametric ordinary differential equations (ODEs). These subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  
+
+In particular, this repository contains Julia code for all numerical examples in our accompanying article:
+
+ > Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, accepted (2024).
+
+This implementation was developed by Yingkai Song in Julia. This repository is tied to the accompanying article, and will not be updated except for bug fixes. If you make use of this code, please cite our article as above. The adjoint sensitivity approach described in this article was [subsequently implemented](https://github.com/kamilkhanlab/continuous-convex-adjoints), as [described by Zhang and Khan](https://doi.org/10.1016/j.compchemeng.2023.108462).
+
+This work was supported by the McMaster Advanced Control Consortium (MACC), and by the Natural Sciences and Engineering Research Council of Canada (NSERC) under Grant RGPIN-2017-05944.
+
+## Problem formulation
+
+Consider a parametric ordinary differential equation (ODE) system:
 
 $$
 \begin{align*}
@@ -9,7 +21,8 @@ $$
 \end{align*}
 $$
 
-We consider two established methods for computing useful (but perhaps nonsmooth) convex relaxations of solutions of this parametric ODE system, namely,
+We consider two established methods for computing useful (but perhaps nonsmooth) convex relaxations of solutions of this parametric ODE system, namely:
+
 - the generalized-McCormick-based (GMB) relaxations proposed by [Scott and Barton (2013)](https://link.springer.com/article/10.1007/s10898-012-9909-0), and
 - the optimization-based (OB) relaxations proposed by [Song and Khan (2022)](https://link.springer.com/article/10.1007/s10107-021-01654-x).
 
@@ -25,13 +38,7 @@ $$
 (Discontinuous jumps in Scott-Barton's formulation are neglected in this description, though we argue that these cannot occur when the considered subdomain is sufficiently small.)
 The GMB and OB relaxation methods construct different right-hand-side (RHS) functions $(\mathbf{u},\mathbf{o})$ for use in the ODEs above.
 
-This repository illustrates our new approaches for computing subgradients for the GMB and OB relaxations. The subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  This repository contains Julia code for all numerical examples in our accompanying manuscript:
 
- > Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, under review.
-
-This implementation was developed by Yingkai Song in Julia. This repository is tied to the accompanying article, and will not be updated except for bug fixes. If you make use of this code, please cite our article as above.
-
-This work was supported by the McMaster Advanced Control Consortium (MACC), and by the Natural Sciences and Engineering Research Council of Canada (NSERC) under Grant RGPIN-2017-05944.
 
 ## Dependencies
 
@@ -64,6 +71,7 @@ The involved functions above are constructed automatically based on sensitivity 
 Compared to the only established subgradient evaluation method ([Khan and Barton, 2014](https://dspace.mit.edu/handle/1721.1/103513)) for the GMB relaxations, our new method has the advantage that the resulting subgradient evaluation ODE system is affine, and thus can be easily solved by off-the-shelf ODE solvers. Such affine nature also enables an efficient adjoint subgradient evaluation method whose implementation is proposed by Zhang and Khan (2023). Moreover, this system's RHS functions can be readily constructed from established subgradient library provided by [EAGO.jl](https://github.com/PSORLab/EAGO.jl) or [MC++](https://github.com/coin-or/MCpp) in C++. Prior to our current manuscript, there was no existing subgradient evaluation method for the OB relaxations. For more details, please refer to the accompanying manuscript.
 
 ## Implementation contents
+
 The [`/src/`](https://github.com/kamilkhanlab/convex-ode-subgradients/tree/main/src) folder provides our code for two numerical examples in the accompanying manuscript. Note that even though this implementation is illustrated using the two examples, the implementation itself is versatile, and can construct ODE relaxation and subgradient evaluation systems automatically for any original parametric ODE system.
 
 ### [Example1.jl](src/Example1.jl)
@@ -84,5 +92,6 @@ This is a Julia implementation which computes subgradients of the OB relaxations
 - K.A. Khan and P.I. Barton, Generalized derivatives for solutions of parametric ordinary differential equations with non-differentiable right-hand sides, *J Optim Theory Appl*, **163**, 355-386 (2014)
 - J.K. Scott and P.I. Barton, Improved relaxations for the parametric solutions of ODEs using differential inequalities, *J Glob Optim*, **57**(1), 143-176 (2013)
 - Y. Song and K.A. Khan, Optimization-based convex relaxations for nonconvex parametric systems of ordinary differential equations, *Math Program*, **196**, 521-565 (2022)
-- Y. Zhang and K.A. Khan, Implementing adjoint subgradient evaluation for use in global dynamic optimization, in *Proceedings of FOCAPO/CPC 2023*, in press (2023)
+- Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, accepted (2024)
+- Y. Zhang and K.A. Khan, Evaluating subgradients for convex relaxations of dynamic process models by adapting current tools, *Computers & Chemical Engineering*, **180**, 108462 (2024). 
 
