@@ -1,12 +1,12 @@
 # convex-ode-subgradients
 
-Convex relaxations of nonconvex functions are useful in methods for global optimization, since local minimization of a convex relaxation will provide a lower bound for the overarching global optimization problem. This repository illustrates our new approach for computing subgradients for two recent convex relaxation methods (summarized below) for parametric ordinary differential equations (ODEs). These subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  
+Convex relaxations of nonconvex functions are useful in methods for global optimization, since local minimization of a convex relaxation will provide a lower bound for the overarching global optimization problem. This repository illustrates [our new approach](https://doi.org/10.1080/10556788.2024.2346641) for computing subgradients for two recent convex relaxation methods (summarized below) for parametric ordinary differential equations (ODEs). These subgradients are useful for solving the bounding problems constructed from ODE relaxations in a branch-and-bound procedure.  
 
 In particular, this repository contains Julia code for all numerical examples in our accompanying article:
 
- > Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, accepted (2024).
+ > Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, in press (2024). doi:10.1080/10556788.2024.2346641
 
-This implementation was developed by Yingkai Song in Julia. This repository is tied to the accompanying article, and will not be updated except for bug fixes. If you make use of this code, please cite our article as above. The adjoint sensitivity approach described in this article was [subsequently implemented](https://github.com/kamilkhanlab/continuous-convex-adjoints), as [described by Zhang and Khan](https://doi.org/10.1016/j.compchemeng.2023.108462).
+This implementation was developed by Yingkai Song in Julia. This repository is tied to the accompanying article, and will not be updated except for bug fixes. If you make use of this code, please cite our article referenced above. The adjoint sensitivity approach described in this article was [subsequently implemented](https://github.com/kamilkhanlab/continuous-convex-adjoints), as [described by Zhang and Khan](https://doi.org/10.1016/j.compchemeng.2023.108462).
 
 This work was supported by the McMaster Advanced Control Consortium (MACC), and by the Natural Sciences and Engineering Research Council of Canada (NSERC) under Grant RGPIN-2017-05944.
 
@@ -92,6 +92,6 @@ This is a Julia implementation which computes subgradients of the OB relaxations
 - K.A. Khan and P.I. Barton, Generalized derivatives for solutions of parametric ordinary differential equations with non-differentiable right-hand sides, *J Optim Theory Appl*, **163**, 355-386 (2014)
 - J.K. Scott and P.I. Barton, Improved relaxations for the parametric solutions of ODEs using differential inequalities, *J Glob Optim*, **57**(1), 143-176 (2013)
 - Y. Song and K.A. Khan, Optimization-based convex relaxations for nonconvex parametric systems of ordinary differential equations, *Math Program*, **196**, 521-565 (2022)
-- Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, accepted (2024)
+- Y. Song and K.A. Khan, Computing subgradients of convex relaxations for solutions of parametric ordinary differential equations, *Optimization Methods and Software*, in press (2024). doi:10.1080/10556788.2024.2346641
 - Y. Zhang and K.A. Khan, Evaluating subgradients for convex relaxations of dynamic process models by adapting current tools, *Computers & Chemical Engineering*, **180**, 108462 (2024). 
 
